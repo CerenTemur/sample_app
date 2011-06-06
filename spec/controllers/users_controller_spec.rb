@@ -1,4 +1,4 @@
-#require 'spec_helper'
+require 'spec_helper'
 
 describe UsersController do
   render_views
@@ -56,7 +56,7 @@ describe UsersController do
   end
   
 
-describe "GET 'show'" do
+  describe "GET 'show'" do
 
     before(:each) do
       @user = Factory(:user)
@@ -72,7 +72,7 @@ describe "GET 'show'" do
       assigns(:user).should == @user
     end
 
-it "should have the right title" do
+    it "should have the right title" do
       get :show, :id => @user
       response.should have_selector("title", :content => @user.name)
     end
@@ -86,9 +86,17 @@ it "should have the right title" do
       get :show, :id => @user
       response.should have_selector("h1>img", :class => "gravatar")
     end
- end
 
- describe "GET 'new'" do
+    it "should show the user's microposts" do
+      mp1 = Factory(:micropost, :user => @user, :content => "Foo bar")
+      mp2 = Factory(:micropost, :user => @user, :content => "Baz quux")
+      get :show, :id => @user
+      response.should have_selector("span.content", :content => mp1.content)
+      response.should have_selector("span.content", :content => mp2.content)
+    end
+  end
+
+  describe "GET 'new'" do
 
     it "should be successful" do
       get :new
@@ -101,7 +109,7 @@ it "should have the right title" do
     end
  end
  
- describe "POST 'create'" do
+  describe "POST 'create'" do
 
     describe "failure" do
 
@@ -237,7 +245,6 @@ it "should have the right title" do
         response.should redirect_to(root_path)
       end
     end
-    
   
   describe "DELETE 'destroy'" do
 
